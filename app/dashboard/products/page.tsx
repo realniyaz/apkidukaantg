@@ -66,82 +66,87 @@ export default function ProductsPage() {
     });
   }, [products, searchQuery, selectedCategory]);
 
-  if (loading) return <ProductsSkeleton />;
+  if (loading) return <ProductsPageSkeleton />;
 
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
-      className="max-w-7xl mx-auto p-4 md:p-8 space-y-8 pb-32"
+      className="max-w-7xl mx-auto p-4 sm:p-8 space-y-6 sm:space-y-8 pb-24 sm:pb-32"
     >
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-lime-500 animate-pulse shadow-[0_0_10px_#bef264]" />
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Live Product Manager</span>
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
+        <div className="space-y-1.5 sm:space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-1.5 rounded-full bg-lime-500 animate-pulse shadow-[0_0_8px_#bef264]" />
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-wider">Catalog Assistant Live</span>
           </div>
-          <h1 className="text-6xl font-black tracking-tighter italic uppercase leading-none text-slate-900">
-            Product <span className="text-slate-200">Catalog</span>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter italic uppercase leading-none text-slate-900">
+            Product <span className="text-slate-400">Catalog</span>
           </h1>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-3 w-full md:w-auto pt-1 md:pt-0">
           <button 
             onClick={() => fetchData(true)} 
+            disabled={refreshing}
             title="Refresh List"
-            className="p-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:text-lime-600 transition-all active:scale-90"
+            className="p-3.5 sm:p-4 bg-white border border-slate-100 rounded-xl sm:rounded-2xl shadow-sm hover:text-lime-600 transition-all active:scale-95 shrink-0"
           >
-            <RefreshCw size={20} className={refreshing ? "animate-spin text-lime-500" : "text-slate-400"} />
+            <RefreshCw size={18} className={refreshing ? "animate-spin text-lime-500" : "text-slate-400"} />
           </button>
           <button 
             onClick={() => setShowCreateModal(true)}
-            className="flex-1 md:flex-none flex items-center justify-center gap-3 bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-5 sm:px-8 h-11 sm:h-12 rounded-xl sm:rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all"
           >
-            <Plus size={18} /> Add New Product
+            <Plus size={16} /> Add Product
           </button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* STATS TILES MATRIX */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <InventoryStat 
-          label="Total Stock Value" 
+          label="Total Inventory Value" 
           value={`₹${Math.round(dashboardData.reduce((acc, curr) => acc + (curr.stock_value || 0), 0)).toLocaleString('en-IN')}`} 
-          icon={<Zap size={22} />} 
-          sub="Estimated Inventory Worth"
+          icon={<Zap size={20} />} 
+          sub="Estimated inventory valuation"
         />
         <InventoryStat 
-          label="Low Stock Items" 
+          label="Low Stock Alerts" 
           value={dashboardData.filter(i => i.low_stock_warning).length} 
-          icon={<AlertTriangle size={22} />} 
+          icon={<AlertTriangle size={20} />} 
           color="red"
-          sub="Items needing restock"
+          sub="Items needing immediate restock"
         />
         <InventoryStat 
-          label="Items in Catalog" 
+          label="Unique Products" 
           value={products.length} 
-          icon={<Boxes size={22} />} 
-          sub="Total unique products"
+          icon={<Boxes size={20} />} 
+          sub="Total items listed in system"
         />
       </div>
 
+      {/* SEARCH AND FILTERS */}
       <div className="space-y-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 flex items-center gap-4 px-8 bg-white border border-slate-100 rounded-[2rem] shadow-sm focus-within:border-slate-900 transition-all">
-            <Search size={18} className="text-slate-300" />
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
+          <div className="flex-1 flex items-center gap-3 px-4 sm:px-6 bg-white border border-slate-100 rounded-xl sm:rounded-2xl shadow-sm focus-within:border-slate-400 transition-all">
+            <Search size={18} className="text-slate-300 shrink-0" />
             <input 
               type="text" 
               value={searchQuery} 
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by product name or SKU..." 
-              className="bg-transparent py-6 outline-none text-sm w-full font-bold text-slate-700 placeholder:text-slate-300 italic"
+              className="bg-transparent py-4 sm:py-5 outline-none text-sm w-full font-semibold text-slate-700 placeholder:text-slate-300"
             />
           </div>
-          <div className="flex items-center gap-2 px-4 bg-slate-50 rounded-[1.5rem] border border-slate-100 overflow-x-auto no-scrollbar max-w-md">
+          
+          {/* Categories Pill Bar - Horizontal Scrolling on Mobile */}
+          <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-100 overflow-x-auto no-scrollbar max-w-full lg:max-w-md">
             {categories.map((cat) => (
               <button 
                 key={cat} onClick={() => setSelectedCategory(cat)}
-                className={`whitespace-nowrap px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
-                  selectedCategory === cat ? "bg-slate-900 text-lime-400 shadow-lg" : "text-slate-400 hover:text-slate-900"
+                className={`whitespace-nowrap px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all ${
+                  selectedCategory === cat ? "bg-slate-900 text-lime-400 shadow-md" : "text-slate-400 hover:text-slate-900"
                 }`}
               >
                 {cat.replace("_", " ")}
@@ -150,75 +155,78 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-[3.5rem] border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden">
-          <table className="w-full border-separate border-spacing-0">
-            <thead>
-              <tr className="bg-slate-50/50">
-                <th className="px-10 py-5 text-left text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Product Details</th>
-                <th className="px-10 py-5 text-center text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Current Stock</th>
-                <th className="px-10 py-5 text-center text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Selling Price</th>
-                <th className="px-10 py-5 text-right text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50 font-bold">
-              <AnimatePresence mode="popLayout">
-                {filteredProducts.map((p, idx) => (
-                  <motion.tr 
-                    layout
-                    key={p.id || p.public_id} 
-                    initial={{ opacity: 0, y: 5 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    exit={{ opacity: 0 }} 
-                    transition={{ delay: idx * 0.01 }}
-                    className="group hover:bg-slate-50/50 transition-colors"
-                  >
-                    <td className="px-10 py-6">
-                      <div className="flex items-center gap-5">
-                        <div className="h-12 w-12 rounded-2xl bg-slate-900 flex items-center justify-center text-lime-400 shadow-lg group-hover:rotate-6 transition-transform">
-                          <Package size={20} />
+        {/* DATA CONTAINER TABLE CONTAINER */}
+        <div className="bg-white rounded-[1.5rem] sm:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+              <thead>
+                <tr className="bg-slate-50/50">
+                  <th className="px-6 sm:px-10 py-4 text-left text-[9px] font-black uppercase tracking-wider text-slate-400">Product Details</th>
+                  <th className="px-6 sm:px-10 py-4 text-center text-[9px] font-black uppercase tracking-wider text-slate-400">Available Stock</th>
+                  <th className="px-6 sm:px-10 py-4 text-center text-[9px] font-black uppercase tracking-wider text-slate-400">Retail Price</th>
+                  <th className="px-6 sm:px-10 py-4 text-right text-[9px] font-black uppercase tracking-wider text-slate-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50 font-semibold text-slate-700">
+                <AnimatePresence mode="popLayout">
+                  {filteredProducts.map((p, idx) => (
+                    <motion.tr 
+                      layout
+                      key={p.id || p.public_id} 
+                      initial={{ opacity: 0, y: 5 }} 
+                      animate={{ opacity: 1, y: 0 }} 
+                      exit={{ opacity: 0 }} 
+                      transition={{ delay: idx * 0.01 }}
+                      className="group hover:bg-slate-50/40 transition-colors"
+                    >
+                      <td className="px-6 sm:px-10 py-4 sm:py-5">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl sm:rounded-2xl bg-slate-900 flex items-center justify-center text-lime-400 shadow-md">
+                            <Package size={18} />
+                          </div>
+                          <div>
+                            <p className="text-sm text-slate-900 font-bold uppercase italic tracking-tight line-clamp-1">{p.name}</p>
+                            <p className="text-[9px] text-slate-400 uppercase tracking-wider mt-0.5 font-mono">
+                              SKU: {p.sku || "N/A"}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm text-slate-900 uppercase italic tracking-tighter">{p.name}</p>
-                          <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-1 font-mono">
-                            SKU: {p.sku || "N/A"}
-                          </p>
+                      </td>
+                      <td className="px-6 sm:px-10 py-4 sm:py-5 text-center">
+                        <div className="flex flex-col items-center">
+                           <span className={`text-base sm:text-lg font-black tabular-nums ${p.available_stock <= (p.low_stock_threshold || 5) ? 'text-red-600' : 'text-slate-900'}`}>
+                            {p.available_stock}
+                           </span>
+                           <span className="text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Units</span>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-10 py-6 text-center">
-                      <div className="flex flex-col items-center">
-                         <span className={`text-lg font-black tabular-nums ${p.available_stock <= (p.low_stock_threshold || 5) ? 'text-red-600' : 'text-slate-900'}`}>
-                          {p.available_stock}
-                         </span>
-                         <span className="text-[8px] text-slate-400 uppercase tracking-widest mt-0.5">Units Available</span>
-                      </div>
-                    </td>
-                    <td className="px-10 py-6 text-center">
-                      <p className="text-sm font-black text-slate-900 tabular-nums italic">
-                        ₹{Number(p.selling_price || p.default_selling_price).toLocaleString()}
-                      </p>
-                    </td>
-                    <td className="px-10 py-6 text-right">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {/* FIX: Move 'title' from the Activity icon to the button parent */}
-                         <button 
-                            onClick={() => setEditingProduct(p)} 
-                            title="Edit Product"
-                            className="h-10 w-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-900 transition-all shadow-sm active:scale-90"
-                         >
-                            <Activity size={16} />
-                         </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
-            </tbody>
-          </table>
+                      </td>
+                      <td className="px-6 sm:px-10 py-4 sm:py-5 text-center">
+                        <p className="text-sm font-black text-slate-900 tabular-nums italic">
+                          ₹{Number(p.selling_price || p.default_selling_price).toLocaleString('en-IN')}
+                        </p>
+                      </td>
+                      <td className="px-6 sm:px-10 py-4 sm:py-5 text-right">
+                        {/* Mobile optimization: Action buttons are permanently visible on touch targets, instead of using hover states */}
+                        <div className="flex justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                           <button 
+                              onClick={() => setEditingProduct(p)} 
+                              title="Edit Product"
+                              className="h-9 w-9 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-900 hover:border-slate-900 transition-all active:scale-95"
+                           >
+                              <Activity size={14} />
+                           </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
           
           {filteredProducts.length === 0 && (
-             <div className="py-20 text-center text-slate-400 italic">
-               No products found matching your search.
+             <div className="py-16 text-center text-slate-400 text-sm font-medium italic">
+               No products found matching your criteria.
              </div>
           )}
         </div>
@@ -247,30 +255,32 @@ export default function ProductsPage() {
 
 function InventoryStat({ label, value, icon, sub, color = "lime" }: any) {
   return (
-    <div className="bg-white p-8 rounded-[3rem] border border-slate-100 flex items-center justify-between group hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
-      <div className="flex items-center gap-6">
-        <div className={`h-14 w-14 rounded-[1.5rem] flex items-center justify-center transition-all ${color === 'red' ? 'bg-red-500 text-white animate-pulse' : 'bg-slate-900 text-lime-400'}`}>
+    <div className="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[3rem] border border-slate-100 flex items-center justify-between group hover:shadow-md transition-all duration-300 relative overflow-hidden">
+      <div className="flex items-center gap-4 sm:gap-6">
+        <div className={`h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-xl sm:rounded-[1.5rem] flex items-center justify-center transition-all ${color === 'red' ? 'bg-red-500 text-white animate-pulse' : 'bg-slate-900 text-lime-400'}`}>
           {icon}
         </div>
         <div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{label}</p>
-          <p className={`text-4xl font-black tabular-nums tracking-tighter italic ${color === 'red' ? 'text-red-600' : 'text-slate-900'}`}>{value}</p>
-          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">{sub}</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">{label}</p>
+          <p className={`text-2xl sm:text-4xl font-black tabular-nums tracking-tighter italic ${color === 'red' ? 'text-red-600' : 'text-slate-900'}`}>{value}</p>
+          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{sub}</p>
         </div>
       </div>
-      <div className="h-10 w-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white transition-all">
-        <ArrowUpRight size={18} />
+      <div className="h-8 w-8 sm:h-10 sm:w-10 bg-slate-50 rounded-lg sm:rounded-xl flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white transition-all shrink-0">
+        <ArrowUpRight size={16} />
       </div>
     </div>
   );
 }
 
-function ProductsSkeleton() {
+function ProductsPageSkeleton() {
   return (
-    <div className="max-w-7xl mx-auto p-8 space-y-10 animate-pulse">
-      <div className="h-16 w-1/3 bg-slate-100 rounded-2xl" />
-      <div className="grid grid-cols-3 gap-8">{[1, 2, 3].map(i => <div key={i} className="h-48 bg-slate-50 rounded-[3rem]" />)}</div>
-      <div className="h-[600px] bg-slate-50 rounded-[4rem]" />
+    <div className="max-w-7xl mx-auto p-4 sm:p-8 space-y-6 sm:space-y-10 animate-pulse">
+      <div className="h-12 w-1/3 bg-slate-100 rounded-xl" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
+        {[1, 2, 3].map(i => <div key={i} className="h-32 sm:h-48 bg-slate-50 rounded-2xl sm:rounded-[3rem]" />)}
+      </div>
+      <div className="h-[400px] sm:h-[600px] bg-slate-50 rounded-2xl sm:rounded-[4rem]" />
     </div>
   );
 }
