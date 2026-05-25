@@ -6,7 +6,6 @@ import {
   ArrowUpRight, 
   Package, 
   Clock, 
-  Activity,
   Box
 } from "lucide-react";
 
@@ -21,93 +20,97 @@ interface Movement {
 export default function InventoryMovements({ movements }: { movements: Movement[] }) {
   if (!movements || movements.length === 0) {
     return (
-      <div className="py-20 text-center opacity-20">
-        <Box size={48} className="mx-auto mb-4" />
-        <p className="font-black uppercase tracking-widest text-[10px]">No Neural Movements Detected</p>
+      <div className="py-20 text-center opacity-40 bg-white rounded-xl sm:rounded-[2rem] border border-slate-100">
+        <Box size={40} className="mx-auto mb-3 text-slate-300" />
+        <p className="font-black uppercase tracking-wider text-[10px] text-slate-400">No stock movements recorded</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="border-b border-slate-100 italic">
-            <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Log Identifier</th>
-            <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Volume</th>
-            <th className="px-8 py-6 text-left text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Vector</th>
-            <th className="px-8 py-6 text-right text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Timestamp</th>
-          </tr>
-        </thead>
+    <div className="w-full overflow-hidden bg-white rounded-xl sm:rounded-[2rem] border border-slate-100 shadow-sm">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-separate border-spacing-0 min-w-[600px]">
+          <thead>
+            <tr className="bg-slate-50/50 text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 italic">
+              <th className="px-5 sm:px-8 py-4 text-left">Activity Type</th>
+              <th className="px-5 sm:px-8 py-4 text-left">Quantity</th>
+              <th className="px-5 sm:px-8 py-4 text-left w-32">Direction</th>
+              <th className="px-5 sm:px-8 py-4 text-right w-36">Timestamp</th>
+            </tr>
+          </thead>
 
-        <tbody className="divide-y divide-slate-50 font-bold">
-          {movements.map((m, idx) => {
-            const isIncoming = m.direction === "IN";
-            
-            return (
-              <motion.tr
-                key={m.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="group hover:bg-slate-50/80 transition-all duration-300"
-              >
-                {/* MOVEMENT TYPE */}
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`h-10 w-10 rounded-xl flex items-center justify-center border transition-transform group-hover:rotate-12 ${
-                      isIncoming ? 'bg-lime-50 border-lime-100 text-lime-600' : 'bg-red-50 border-red-100 text-red-600'
+          <tbody className="divide-y divide-slate-50 font-semibold text-slate-700">
+            {movements.map((m, idx) => {
+              const isIncoming = m.direction === "IN";
+              
+              return (
+                <motion.tr
+                  key={m.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.03, duration: 0.2 }}
+                  className="group hover:bg-slate-50/40 transition-colors duration-150 cursor-default"
+                >
+                  {/* MOVEMENT TYPE */}
+                  <td className="px-5 sm:px-8 py-4">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className={`h-9 w-9 rounded-xl flex items-center justify-center border shrink-0 transition-transform duration-300 group-hover:scale-105 ${
+                        isIncoming ? 'bg-lime-50 border-lime-100/70 text-lime-600' : 'bg-red-50 border-red-100/70 text-red-500'
+                      }`}>
+                        <Package size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-slate-900 font-black text-sm tracking-tight uppercase italic truncate">{m.movement_type}</p>
+                        <p className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Stock Adjustment</p>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* QUANTITY */}
+                  <td className="px-5 sm:px-8 py-4">
+                    <div className="flex flex-col">
+                      <span className={`text-base sm:text-lg font-black tabular-nums tracking-tight italic ${
+                        isIncoming ? 'text-lime-600' : 'text-red-500'
+                      }`}>
+                        {isIncoming ? "+" : "-"}{m.quantity}
+                      </span>
+                      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wide">Units</span>
+                    </div>
+                  </td>
+
+                  {/* DIRECTION VECTOR */}
+                  <td className="px-5 sm:px-8 py-4">
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-wider italic shrink-0 ${
+                      isIncoming 
+                        ? 'bg-lime-50 text-lime-600 border-lime-200/60' 
+                        : 'bg-slate-900 text-white border-slate-800'
                     }`}>
-                      <Package size={18} />
+                      {isIncoming ? <ArrowDownLeft size={12} strokeWidth={2.5} /> : <ArrowUpRight size={12} strokeWidth={2.5} />}
+                      {isIncoming ? 'Inbound' : 'Outbound'}
                     </div>
-                    <div>
-                      <p className="text-slate-900 uppercase italic tracking-tight">{m.movement_type}</p>
-                      <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">Neural Transaction</p>
-                    </div>
-                  </div>
-                </td>
+                  </td>
 
-                {/* QUANTITY */}
-                <td className="px-8 py-6">
-                  <div className="flex flex-col">
-                    <span className="text-xl font-black tabular-nums tracking-tighter text-slate-900">
-                      {isIncoming ? "+" : "-"}{m.quantity}
-                    </span>
-                    <span className="text-[9px] text-slate-400 font-black uppercase">Units</span>
-                  </div>
-                </td>
-
-                {/* DIRECTION VECTOR */}
-                <td className="px-8 py-6">
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest ${
-                    isIncoming 
-                      ? 'bg-lime-500 text-white border-lime-600 shadow-lg shadow-lime-500/20' 
-                      : 'bg-slate-900 text-white border-slate-800'
-                  }`}>
-                    {isIncoming ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
-                    {m.direction}
-                  </div>
-                </td>
-
-                {/* TIMESTAMP */}
-                <td className="px-8 py-6 text-right">
-                  <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-2 text-slate-900">
-                      <Clock size={12} className="text-slate-300" />
-                      <span className="text-sm font-black tabular-nums italic">
-                        {new Date(m.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                  {/* TIMESTAMP */}
+                  <td className="px-5 sm:px-8 py-4 text-right">
+                    <div className="flex flex-col items-end shrink-0 font-medium">
+                      <div className="flex items-center gap-1.5 text-slate-900">
+                        <Clock size={12} className="text-slate-300 shrink-0" />
+                        <span className="text-sm font-bold tabular-nums italic">
+                          {new Date(m.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wide mt-0.5 font-mono">
+                        {new Date(m.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
                       </span>
                     </div>
-                    <span className="text-[9px] text-slate-400 font-black uppercase tracking-tighter">
-                      {new Date(m.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
-                    </span>
-                  </div>
-                </td>
-              </motion.tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  </td>
+                </motion.tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -3,10 +3,9 @@
 import { memo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, ChevronRight, User, ArrowUpRight, ReceiptText } from "lucide-react";
+import { ArrowUpRight, User, ReceiptText } from "lucide-react";
 import StatusBadge from "./StatusBadge";
 
-// Optimized Types matching your backend schema
 interface Purchase {
   id: number;
   purchase_number: string;
@@ -19,84 +18,72 @@ interface Purchase {
 
 const PurchaseTable = ({ purchases }: { purchases: Purchase[] }) => {
   
-  // 1. Empty State Optimization
+  // 1. Empty State Framework
   if (!purchases || purchases.length === 0) {
     return (
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center py-24 bg-white rounded-[2.5rem] border border-dashed border-slate-200 m-4"
+        className="flex flex-col items-center justify-center py-20 bg-white rounded-xl sm:rounded-[2rem] border border-dashed border-slate-200 p-4 m-2 text-center"
       >
-        <div className="bg-slate-50 p-5 rounded-[1.5rem] mb-4 text-slate-300">
-          <ReceiptText size={40} strokeWidth={1.5} />
+        <div className="bg-slate-50 p-4 rounded-xl mb-4 text-slate-300 shrink-0">
+          <ReceiptText size={32} strokeWidth={2} />
         </div>
-        <h3 className="text-slate-900 font-black text-lg tracking-tight">No Procurement Records</h3>
-        <p className="text-slate-400 text-sm max-w-[280px] text-center mt-1 font-medium">
-          Start by creating your first purchase voucher to track inventory growth.
+        <h3 className="text-slate-900 font-black text-base tracking-tight uppercase italic">No Purchase Records</h3>
+        <p className="text-slate-400 text-xs max-w-[280px] mx-auto mt-1 font-semibold leading-normal">
+          Start by recording your first purchase order to log new inventory arrivals.
         </p>
       </motion.div>
     );
   }
 
   return (
-    <div className="w-full overflow-hidden bg-white rounded-[2.5rem] border border-slate-100 shadow-sm">
-      <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full border-separate border-spacing-0">
+    <div className="w-full overflow-hidden bg-white rounded-xl sm:rounded-[2rem] border border-slate-100 shadow-sm">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-separate border-spacing-0 min-w-[750px]">
           <thead>
-            <tr className="bg-slate-50/50">
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-left text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Voucher Ref
-              </th>
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-left text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Entity
-              </th>
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-left text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Valuation
-              </th>
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-left text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Lifecycle
-              </th>
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-left text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Filing Date
-              </th>
-              <th className="sticky top-0 z-10 border-b border-slate-100 px-8 py-5 text-right text-[10px] uppercase tracking-[0.2em] font-black text-slate-400">
-                Action
-              </th>
+            <tr className="bg-slate-50/50 text-[9px] sm:text-[10px] uppercase tracking-wider font-black text-slate-400 border-b border-slate-100">
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-left">Order Ref</th>
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-left">Supplier Name</th>
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-left">Total Amount</th>
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-left">Status</th>
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-left">Created At</th>
+              <th className="sticky top-0 z-10 px-6 sm:px-8 py-4 text-right">View</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-slate-50 font-semibold text-slate-700">
             <AnimatePresence mode="popLayout">
               {purchases.map((p, idx) => (
                 <motion.tr 
                   key={p.id} 
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.2, delay: idx * 0.04 }}
-                  className="group hover:bg-slate-50/60 transition-colors duration-200 cursor-default"
+                  transition={{ duration: 0.15, delay: idx * 0.02 }}
+                  className="group hover:bg-slate-50/40 transition-colors duration-150 cursor-default"
                 >
                   {/* Voucher Reference */}
-                  <td className="px-8 py-6">
+                  <td className="px-6 sm:px-8 py-4">
                     <Link 
                       href={`/dashboard/purchases/${p.id}`} 
-                      className="inline-flex items-center font-mono text-[13px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg group-hover:bg-slate-900 group-hover:text-white transition-all"
+                      className="inline-flex items-center font-mono text-xs font-bold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md group-hover:bg-slate-900 group-hover:text-white transition-all tracking-tight"
                     >
                       {p.purchase_number}
                     </Link>
                   </td>
 
                   {/* Supplier Entity */}
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-2xl bg-lime-50 text-lime-600 flex items-center justify-center border border-lime-100 shadow-sm transition-transform group-hover:scale-110">
-                        <User size={16} />
+                  <td className="px-6 sm:px-8 py-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-8 w-8 rounded-xl bg-lime-50 text-lime-600 flex items-center justify-center border border-lime-100/50 shadow-sm shrink-0">
+                        <User size={14} />
                       </div>
-                      <div className="flex flex-col">
-                        <span className="font-black text-slate-900 text-sm tracking-tight leading-tight">
-                          {p.supplier_name || "Direct Procurement"}
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-black text-slate-900 text-sm tracking-tight leading-none truncate">
+                          {p.supplier_name || "Direct Purchase"}
                         </span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1">
                           Verified Vendor
                         </span>
                       </div>
@@ -104,41 +91,41 @@ const PurchaseTable = ({ purchases }: { purchases: Purchase[] }) => {
                   </td>
 
                   {/* Valuation/Amount */}
-                  <td className="px-8 py-6">
+                  <td className="px-6 sm:px-8 py-4">
                     <div className="flex flex-col">
-                      <span className="text-slate-900 font-black text-sm tabular-nums">
+                      <span className="text-slate-900 font-black text-sm tabular-nums tracking-tight">
                         ₹{p.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </span>
-                      <span className="text-[10px] font-bold text-emerald-500 uppercase mt-0.5">
-                        {p.total_amount === p.paid_amount ? 'Fully Settled' : `₹${(p.total_amount - p.paid_amount).toLocaleString()} Due`}
+                      <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide mt-0.5">
+                        {p.total_amount === p.paid_amount ? 'Fully Settled' : `₹${(p.total_amount - p.paid_amount).toLocaleString('en-IN')} Due`}
                       </span>
                     </div>
                   </td>
 
                   {/* Status */}
-                  <td className="px-8 py-6">
+                  <td className="px-6 sm:px-8 py-4">
                     <StatusBadge status={p.status} />
                   </td>
 
                   {/* Date Formatting */}
-                  <td className="px-8 py-6">
+                  <td className="px-6 sm:px-8 py-4">
                     <div className="flex flex-col">
                       <span className="text-slate-700 text-sm font-bold tracking-tight">
                         {new Date(p.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mt-0.5 font-mono">
                         {new Date(p.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
                   </td>
 
                   {/* Actions */}
-                  <td className="px-8 py-6 text-right">
+                  <td className="px-6 sm:px-8 py-4 text-right">
                     <Link 
                       href={`/dashboard/purchases/${p.id}`}
-                      className="inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:border-slate-900 hover:text-slate-900 hover:shadow-lg hover:shadow-slate-200/50 transition-all active:scale-90"
+                      className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-white border border-slate-100 text-slate-400 hover:border-slate-900 hover:text-slate-900 hover:shadow-sm transition-all active:scale-95 shrink-0"
                     >
-                      <ArrowUpRight size={20} />
+                      <ArrowUpRight size={16} />
                     </Link>
                   </td>
                 </motion.tr>

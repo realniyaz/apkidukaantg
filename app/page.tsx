@@ -1,65 +1,73 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Zap, Sparkles, BrainCircuit, ShieldCheck, BarChart3 } from "lucide-react";
+import Link from "next/link";
+
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col">
+      {/* NAVIGATION */}
+      <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 bg-lime-500 rounded-lg flex items-center justify-center shadow-sm">
+            <Zap size={16} className="text-white" fill="white" />
+          </div>
+          <span className="font-black text-sm uppercase tracking-tighter">Apkidukaan</span>
+        </div>
+        <Link 
+          href="/auth/register" 
+          className="text-[10px] font-black uppercase tracking-widest hover:text-lime-600 transition-colors"
+        >
+          Register
+        </Link>
+      </header>
+
+      {/* HERO SECTION */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 py-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="space-y-6 max-w-2xl"
+        >
+          <div className="flex items-center justify-center gap-2 text-lime-600 font-black text-[9px] uppercase tracking-widest bg-lime-50 px-3 py-1 rounded-full border border-lime-100 w-fit mx-auto">
+            <Sparkles size={10} /> Smart Retail Partner
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight uppercase italic leading-[0.9]">
+            Grow your<br/> 
+            <span className="text-lime-500">Sales Velocity.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          
+          <p className="text-slate-500 font-medium text-base md:text-lg max-w-md mx-auto leading-relaxed">
+            Stop guessing. Start restocking smarter. Apkidukaan gives you the insights to move stock and grow profits.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+          <Link 
+            href="/auth/login" 
+            className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all active:scale-[0.98] shadow-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            Launch Platform <ArrowRight size={14} />
+          </Link>
+        </motion.div>
       </main>
+
+      {/* FOOTER FEATURES */}
+      <footer className="w-full max-w-4xl mx-auto px-6 py-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <Feature label="Profit Insights" icon={<BarChart3 size={14} />} />
+        <Feature label="Inventory Guards" icon={<ShieldCheck size={14} />} />
+        <Feature label="Smart Demand" icon={<BrainCircuit size={14} />} />
+      </footer>
+    </div>
+  );
+}
+
+function Feature({ label, icon }: { label: string; icon: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-center gap-2 text-slate-400 font-black text-[9px] uppercase tracking-widest">
+      {icon} {label}
     </div>
   );
 }

@@ -14,7 +14,8 @@ import {
   LogOut, ChevronRight, Bell, Search, Settings, 
   BadgeIndianRupee, ShieldAlert, BrainCircuit,
   BriefcaseBusinessIcon, BadgeIndianRupeeIcon, Menu, X,
-  Zap, Command, Cpu, Store
+  Zap, Command, Cpu, Store,
+  User
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   {
     section: "Commerce",
     items: [
+      { name: "Users", href: "/dashboard/users", icon: User },
       { name: "Customers", href: "/dashboard/customers", icon: UsersIconAlternative },
       { name: "Products", href: "/dashboard/products", icon: Package },
       { name: "Purchases", href: "/dashboard/purchases", icon: ShoppingCart },

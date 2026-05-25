@@ -27,7 +27,7 @@ export default function SaleItemRow({ item, index, onUpdate, onRemove }: SaleIte
     };
   }, [item.quantity, item.selling_price, item.gst_percent]);
 
-  // --- 🟢 FIX: Safe formatting to prevent NaN attribute errors in React ---
+  // Safe formatting to prevent NaN attribute errors in React
   const formatValue = (val: any) => {
     if (val === "" || val === null || val === undefined || isNaN(Number(val))) {
       return "";
@@ -53,48 +53,48 @@ export default function SaleItemRow({ item, index, onUpdate, onRemove }: SaleIte
       initial={{ opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-      className="group relative flex flex-col md:flex-row items-stretch md:items-end gap-4 p-6 bg-white border border-slate-100 rounded-[2rem] hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 mb-4"
+      className="group relative flex flex-col md:flex-row items-stretch md:items-end gap-4 p-4 sm:p-6 bg-white border border-slate-100 rounded-xl sm:rounded-[2rem] hover:shadow-md transition-all duration-300 mb-3 sm:mb-4"
     >
       {/* Visual Index Decorator */}
-      <div className="absolute -left-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-slate-900 rounded-xl flex items-center justify-center border-4 border-white shadow-lg z-10 hidden md:flex">
+      <div className="absolute -left-3 top-1/2 -translate-y-1/2 h-8 w-8 bg-slate-900 rounded-xl flex items-center justify-center border-4 border-white shadow-md z-10 hidden md:flex">
         <span className="text-[10px] font-black text-lime-400 font-mono">
           {(index + 1).toString().padStart(2, '0')}
         </span>
       </div>
 
       {/* Product Description */}
-      <div className="flex-[3] space-y-2">
-        <label className="text-[9px] font-black uppercase text-slate-400 ml-1 flex items-center gap-1.5 tracking-widest">
-          <Hash size={10} strokeWidth={3} /> Uplink Entity Name
+      <div className="flex-[3] space-y-1.5 sm:space-y-2">
+        <label className="text-[9px] font-black uppercase text-slate-400 ml-0.5 flex items-center gap-1.5 tracking-wider">
+          <Hash size={10} strokeWidth={2.5} /> Product Name
         </label>
         <input
           required
-          placeholder="Enter product description..."
-          className="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl text-xs font-bold outline-none focus:border-lime-500 focus:bg-white transition-all placeholder:text-slate-300 shadow-inner"
+          placeholder="Type product name or select..."
+          className="w-full bg-slate-50 border-2 border-transparent p-3.5 sm:p-4 rounded-xl sm:rounded-2xl text-xs font-semibold outline-none focus:border-lime-500 focus:bg-white transition-all placeholder:text-slate-300 shadow-inner text-slate-800"
           value={item.product_name || ""}
           onChange={(e) => onUpdate(index, "product_name", e.target.value)}
         />
       </div>
 
-      {/* Numerical Matrix Controls */}
-      <div className="flex-[4] grid grid-cols-3 gap-3">
+      {/* Pricing Matrix Controls */}
+      <div className="flex-[4] grid grid-cols-3 gap-2.5 sm:gap-3">
         {/* Quantity */}
-        <div className="space-y-2 text-center">
-          <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Qty</label>
+        <div className="space-y-1.5 sm:space-y-2 text-center">
+          <label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Qty</label>
           <input
             required
             type="number"
             min="1"
             placeholder="0"
-            className="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner"
-            value={formatValue(item.quantity)} // ✅ FIXED
+            className="w-full bg-slate-50 border-2 border-transparent p-3.5 sm:p-4 rounded-xl sm:rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner text-slate-800"
+            value={formatValue(item.quantity)}
             onChange={(e) => handleNumberInput("quantity", e.target.value)}
           />
         </div>
 
         {/* Selling Price */}
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest flex justify-center gap-1">
+        <div className="space-y-1.5 sm:space-y-2 text-center">
+          <label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">
             Price (₹)
           </label>
           <input
@@ -103,54 +103,47 @@ export default function SaleItemRow({ item, index, onUpdate, onRemove }: SaleIte
             min="0"
             step="0.01"
             placeholder="0.00"
-            className="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner"
-            value={formatValue(item.selling_price)} // ✅ FIXED
+            className="w-full bg-slate-50 border-2 border-transparent p-3.5 sm:p-4 rounded-xl sm:rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner text-slate-800"
+            value={formatValue(item.selling_price)}
             onChange={(e) => handleNumberInput("selling_price", e.target.value)}
           />
         </div>
 
         {/* GST % */}
-        <div className="space-y-2 text-center">
-          <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest flex justify-center gap-1">
+        <div className="space-y-1.5 sm:space-y-2 text-center">
+          <label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">
             GST %
           </label>
           <input
             type="number"
             min="0"
             placeholder="0"
-            className="w-full bg-slate-50 border-2 border-transparent p-4 rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner"
-            value={formatValue(item.gst_percent)} // ✅ FIXED
+            className="w-full bg-slate-50 border-2 border-transparent p-3.5 sm:p-4 rounded-xl sm:rounded-2xl text-xs font-black outline-none focus:border-lime-500 focus:bg-white transition-all tabular-nums text-center shadow-inner text-slate-800"
+            value={formatValue(item.gst_percent)}
             onChange={(e) => handleNumberInput("gst_percent", e.target.value)}
           />
         </div>
       </div>
 
-      {/* Yield Result (Line Total) */}
-      <div className="flex-[1.5] flex flex-col items-center md:items-end justify-end pb-1 space-y-1">
-        <span className="text-[8px] font-black text-slate-300 uppercase tracking-tighter italic">Line Yield</span>
-        <div className="flex items-baseline gap-1">
-          <span className="text-xs font-black text-slate-900 tabular-nums italic">
-            ₹{lineTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+      {/* Row Calculations Total */}
+      <div className="flex-[1.5] flex flex-row md:flex-col items-center md:items-end justify-between md:justify-end pb-1 pt-2 md:pt-0 border-t border-slate-50 md:border-none">
+        <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider italic">Item Total</span>
+        <div className="flex items-baseline gap-1 md:mt-1">
+          <span className="text-sm font-black text-slate-900 tabular-nums italic">
+            ₹{lineTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </span>
-        </div>
-        <div className="h-1 w-12 bg-slate-100 rounded-full overflow-hidden">
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: lineTotal > 0 ? '100%' : '0%' }}
-            className="h-full bg-lime-400"
-          />
         </div>
       </div>
 
-      {/* Terminal Action */}
-      <div className="flex items-end pb-1.5 pl-2">
+      {/* Action Item Buttons */}
+      <div className="absolute right-2 top-2 md:relative md:right-auto md:top-auto flex items-end justify-end">
         <button
           type="button"
           onClick={() => onRemove(index)}
-          className="h-10 w-10 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all active:scale-90"
-          title="Void Item"
+          className="h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg sm:rounded-xl transition-all active:scale-95"
+          title="Remove Item"
         >
-          <Trash2 size={16} strokeWidth={2.5} />
+          <Trash2 size={15} strokeWidth={2.5} />
         </button>
       </div>
     </motion.div>

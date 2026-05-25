@@ -11,12 +11,11 @@ interface Props {
 }
 
 export default function CreateUserModal({ onClose, onSuccess }: Props) {
-  // Payload matches your backend's expected structure
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    role_name: "staff", // Matches backend payload.role_name
+    role_name: "staff", 
   });
 
   const [loading, setLoading] = useState(false);
@@ -35,116 +34,117 @@ export default function CreateUserModal({ onClose, onSuccess }: Props) {
       onSuccess();
       onClose();
     } catch (err: any) {
-      // Handles the 400/403 errors from your backend service
-      setError(err.message || "Failed to create user");
+      setError(err.message || "Could not register account. Please check your connection.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-[#2D3748]/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+    <div className="fixed inset-0 bg-[#2D3748]/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 overflow-y-auto">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+        exit={{ opacity: 0, scale: 0.95, y: 15 }}
+        className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative my-auto"
       >
-        {/* Header - Slate Gray & Lime Green branding */}
-        <div className="bg-[#2D3748] p-6 text-white flex justify-between items-center">
+        {/* Header Section */}
+        <div className="bg-[#2D3748] p-5 sm:p-6 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="bg-[#84CC16] p-2 rounded-lg">
-              <UserPlus size={20} className="text-white" />
+            <div className="bg-[#84CC16] p-2 rounded-lg shrink-0">
+              <UserPlus size={18} className="text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold leading-none">Add Team Member</h2>
-              <p className="text-xs text-gray-400 mt-1">Assign roles and permissions</p>
+              <h2 className="text-base sm:text-lg font-bold leading-none uppercase italic tracking-tight">Add Team Member</h2>
+              <p className="text-[11px] text-gray-400 mt-1">Assign access tiers and role levels</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
-            <X size={24} />
+          <button onClick={onClose} className="text-gray-400 hover:text-white p-1 transition-colors shrink-0">
+            <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
-          {/* Name Field */}
+        {/* Form Fields */}
+        <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-4 sm:space-y-5">
+          {/* Name Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Full Name</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Full Name</label>
             <div className="relative">
-              <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <UserPlus className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
               <input
                 type="text"
-                placeholder="Full Name"
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-medium text-[#2D3748]"
+                placeholder="John Doe"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-semibold text-[#2D3748]"
                 required
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
           </div>
 
-          {/* Email Field */}
+          {/* Email Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Email Address</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
               <input
                 type="email"
-                placeholder="email@example.com"
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-medium text-[#2D3748]"
+                placeholder="name@store.com"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-semibold text-[#2D3748]"
                 required
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
           </div>
 
-          {/* Password Field */}
+          {/* Password Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Temporary Password</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Temporary Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
               <input
                 type="password"
                 placeholder="••••••••"
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-medium text-[#2D3748]"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-semibold text-[#2D3748]"
                 required
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
           </div>
 
-          {/* Role Selection - Updated for your Backend Permissions */}
+          {/* Role Choice */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Permission Level</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Access Privileges</label>
             <div className="relative">
-              <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={16} />
               <select
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-bold text-[#2D3748] appearance-none"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-bold text-[#2D3748] appearance-none"
                 value={form.role_name}
                 onChange={(e) => setForm({ ...form, role_name: e.target.value })}
               >
                 <option value="staff">Staff</option>
                 <option value="manager">Manager</option>
-                <option value="admin">Admin</option>
-                {/* Note: 'owner' is blocked by your backend logic, so we omit it here */}
+                <option value="admin">Administrator</option>
               </select>
             </div>
           </div>
 
-          {/* Error Display */}
+          {/* Error Message banner */}
           {error && (
             <motion.div 
-              initial={{ opacity: 0, x: -10 }} 
+              initial={{ opacity: 0, x: -5 }} 
               animate={{ opacity: 1, x: 0 }}
-              className="p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium border border-red-100"
+              className="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100 italic"
             >
               {error}
             </motion.div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4">
+          {/* Action Trigger Row */}
+          <div className="flex justify-end gap-3 pt-3.5 border-t border-gray-50">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-[#2D3748] font-bold text-sm hover:bg-gray-100 rounded-xl transition-colors"
+              className="px-5 py-2.5 text-[#2D3748] font-bold text-sm hover:bg-gray-50 rounded-xl transition-colors active:scale-95"
             >
               Cancel
             </button>
@@ -152,15 +152,15 @@ export default function CreateUserModal({ onClose, onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#84CC16] hover:bg-[#74b513] text-white px-8 py-3 rounded-xl font-black text-sm transition-all shadow-lg shadow-[#84CC16]/30 flex items-center gap-2 disabled:opacity-70"
+              className="bg-[#84CC16] hover:bg-[#74b513] text-white px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {loading ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Creating...
+                  <Loader2 size={14} className="animate-spin" />
+                  Saving...
                 </>
               ) : (
-                "Create Account"
+                "Add Profile"
               )}
             </button>
           </div>

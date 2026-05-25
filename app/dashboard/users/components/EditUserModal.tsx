@@ -4,7 +4,6 @@ import { useState } from "react";
 import { apiRequest } from "@/lib/api";
 import { User } from "@/types/user";
 import { motion } from "framer-motion";
-// Corrected UserEdit to UserRoundPen or Edit3
 import { X, UserRoundPen, ShieldCheck, Lock, Loader2, User as UserIcon } from "lucide-react";
 
 export default function EditUserModal({
@@ -48,45 +47,47 @@ export default function EditUserModal({
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || "Update failed");
+      setError(err.message || "Could not update profile. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-[#2D3748]/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+    <div className="fixed inset-0 bg-[#2D3748]/40 backdrop-blur-sm flex items-center justify-center z-[100] p-4 overflow-y-auto">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+        exit={{ opacity: 0, scale: 0.95, y: 15 }}
+        className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative my-auto"
       >
-        {/* Header */}
-        <div className="bg-[#2D3748] p-6 text-white flex justify-between items-center">
+        {/* Header Section */}
+        <div className="bg-[#2D3748] p-5 sm:p-6 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="bg-[#84CC16] p-2 rounded-lg">
-              <UserRoundPen size={20} className="text-white" />
+            <div className="bg-[#84CC16] p-2 rounded-lg shrink-0">
+              <UserRoundPen size={18} className="text-white" />
             </div>
-            <div>
-              <h2 className="text-lg font-bold leading-none">Edit Profile</h2>
-              <p className="text-xs text-gray-400 mt-1">Update details for {user.name}</p>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-bold leading-none uppercase italic tracking-tight">Edit Profile</h2>
+              <p className="text-[11px] text-gray-400 mt-1 truncate">Modify workspace access for {user.name}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
-            <X size={24} />
+          <button onClick={onClose} className="text-gray-400 hover:text-white p-1 transition-colors shrink-0">
+            <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
+        {/* Form Fields */}
+        <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-4 sm:space-y-5">
           {/* Name Field */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Full Name</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Full Name</label>
             <div className="relative">
-              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
               <input
                 type="text"
                 value={form.name}
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-medium text-[#2D3748]"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-semibold text-[#2D3748]"
                 required
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
@@ -95,50 +96,52 @@ export default function EditUserModal({
 
           {/* Role Selection */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Access Level</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Access Privileges</label>
             <div className="relative">
-              <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <ShieldCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={16} />
               <select
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-bold text-[#2D3748] appearance-none cursor-pointer"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-bold text-[#2D3748] appearance-none cursor-pointer"
                 value={form.role_name}
                 onChange={(e) => setForm({ ...form, role_name: e.target.value })}
               >
                 <option value="staff">Staff</option>
                 <option value="manager">Manager</option>
-                <option value="admin">Admin</option>
+                <option value="admin">Administrator</option>
               </select>
             </div>
           </div>
 
           {/* Password Field */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-widest font-black text-gray-400 ml-1">Update Password</label>
+            <label className="text-[9px] uppercase tracking-wider font-black text-gray-400 ml-0.5">Reset Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
               <input
                 type="password"
                 placeholder="Leave blank to keep current"
-                className="w-full border border-gray-100 bg-gray-50/50 p-3 pl-10 rounded-xl focus:ring-2 focus:ring-[#84CC16]/20 focus:border-[#84CC16] outline-none transition-all font-medium text-[#2D3748]"
+                className="w-full border border-gray-100 bg-gray-50/50 py-2.5 sm:py-3 pl-10 pr-4 rounded-xl focus:border-[#84CC16] outline-none transition-all text-sm font-semibold text-[#2D3748] placeholder:text-slate-300"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
           </div>
 
+          {/* Error Banner */}
           {error && (
             <motion.div 
-              initial={{ opacity: 0, x: -10 }} 
+              initial={{ opacity: 0, x: -5 }} 
               animate={{ opacity: 1, x: 0 }}
-              className="p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium border border-red-100"
+              className="p-3 bg-red-50 text-red-600 rounded-xl text-xs font-semibold border border-red-100 italic"
             >
               {error}
             </motion.div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4">
+          {/* Action Row */}
+          <div className="flex justify-end gap-3 pt-3.5 border-t border-gray-50">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-[#2D3748] font-bold text-sm hover:bg-gray-100 rounded-xl transition-colors"
+              className="px-5 py-2.5 text-[#2D3748] font-bold text-sm hover:bg-gray-50 rounded-xl transition-colors active:scale-95"
             >
               Cancel
             </button>
@@ -146,12 +149,12 @@ export default function EditUserModal({
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#84CC16] hover:bg-[#74b513] text-white px-8 py-3 rounded-xl font-black text-sm transition-all shadow-lg shadow-[#84CC16]/30 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="bg-[#84CC16] hover:bg-[#74b513] text-white px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Updating...
+                  <Loader2 size={14} className="animate-spin" />
+                  Saving...
                 </>
               ) : (
                 "Save Changes"

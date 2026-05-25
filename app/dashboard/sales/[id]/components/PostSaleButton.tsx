@@ -15,12 +15,15 @@ export default function PostSaleButton({ onPost, isLoading, isDisabled, tooltipM
       onClick={onPost}
       disabled={isDisabled || isLoading}
       title={tooltipMsg}
-      className="w-full py-6 bg-lime-400 text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-white transition-all shadow-xl shadow-lime-400/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+      className="w-full h-12 sm:h-14 bg-lime-400 hover:bg-lime-500 text-slate-900 rounded-xl sm:rounded-[2rem] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all shadow-md active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
     >
       {isLoading ? (
-        <Loader2 className="animate-spin" size={20} />
+        <Loader2 className="animate-spin text-slate-900" size={16} />
       ) : (
-        <>Post Transaction <CheckCircle size={18} /></>
+        <>
+          <span>Complete Order</span> 
+          <CheckCircle size={16} />
+        </>
       )}
     </button>
   );

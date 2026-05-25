@@ -40,7 +40,7 @@ export default function UpdateDrawer({ isOpen, onClose, initialData, onSuccess }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevents the click from bubbling up to the backdrop
+    e.stopPropagation();
     
     setLoading(true);
     try {
@@ -59,7 +59,7 @@ export default function UpdateDrawer({ isOpen, onClose, initialData, onSuccess }
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Update Sync Error:", error);
+      console.error("Failed to update profile details:", error);
     } finally {
       setLoading(false);
     }
@@ -69,67 +69,69 @@ export default function UpdateDrawer({ isOpen, onClose, initialData, onSuccess }
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div 
-          key="identity-sync-overlay"
+          key="profile-edit-overlay"
           initial={{ opacity: 0 }} 
           animate={{ opacity: 1 }} 
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
         >
           {/* BACKDROP */}
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={onClose} />
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
           
           <motion.div 
-            key="identity-sync-modal"
-            initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+            key="profile-edit-modal"
+            initial={{ scale: 0.96, opacity: 0, y: 15 }} 
             animate={{ scale: 1, opacity: 1, y: 0 }} 
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-xl bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col font-bold"
+            exit={{ scale: 0.96, opacity: 0, y: 15 }}
+            className="relative w-full max-w-xl bg-white rounded-xl sm:rounded-[2.5rem] shadow-xl overflow-hidden flex flex-col font-bold my-auto max-h-[90vh]"
           >
             {/* HEADER */}
-            <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h2 className="text-xl font-black uppercase italic tracking-tighter">Modify <span className="text-lime-600">Parameters</span></h2>
-              <button onClick={onClose} className="text-slate-300 hover:text-red-500 transition-colors">
-                <X size={24} />
+            <div className="p-5 sm:p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/40">
+              <h2 className="text-xl font-black uppercase italic tracking-tight text-slate-900">Edit <span className="text-lime-600">Store Details</span></h2>
+              <button onClick={onClose} className="text-slate-300 hover:text-red-500 transition-colors p-1">
+                <X size={20} />
               </button>
             </div>
 
-            {/* FORM - Added ID here */}
+            {/* FORM AREA */}
             <form 
               id="update-profile-form"
               onSubmit={handleSubmit} 
-              className="p-8 space-y-8 overflow-y-auto max-h-[60vh] custom-scrollbar"
+              className="p-5 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto max-h-[55vh] custom-scrollbar"
             >
-              <InputBlock label="Shop Name" value={formData.shop_name} onChange={(v: string) => setFormData({...formData, shop_name: v})} icon={<Store size={18}/>} />
-              <div className="grid grid-cols-2 gap-6">
-                <InputBlock label="Phone" value={formData.phone} onChange={(v: string) => setFormData({...formData, phone: v})} icon={<Phone size={18}/>} />
-                <InputBlock label="GST" value={formData.gst_number} onChange={(v: string) => setFormData({...formData, gst_number: v})} icon={<Hash size={18}/>} />
+              <InputBlock label="Store Name" value={formData.shop_name} onChange={(v: string) => setFormData({...formData, shop_name: v})} icon={<Store size={16}/>} />
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <InputBlock label="Mobile Number" type="tel" value={formData.phone} onChange={(v: string) => setFormData({...formData, phone: v})} icon={<Phone size={16}/>} />
+                <InputBlock label="GSTIN Number" value={formData.gst_number} onChange={(v: string) => setFormData({...formData, gst_number: v})} icon={<Hash size={16}/>} />
               </div>
-              <InputBlock label="Address" value={formData.address_line} onChange={(v: string) => setFormData({...formData, address_line: v})} icon={<MapPin size={18}/>} />
-              <div className="grid grid-cols-3 gap-4">
+
+              <InputBlock label="Street Address" value={formData.address_line} onChange={(v: string) => setFormData({...formData, address_line: v})} icon={<MapPin size={16}/>} />
+              
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
                 <InputBlock label="City" value={formData.city} onChange={(v: string) => setFormData({...formData, city: v})} />
                 <InputBlock label="State" value={formData.state} onChange={(v: string) => setFormData({...formData, state: v})} />
-                <InputBlock label="Pincode" value={formData.pincode} onChange={(v: string) => setFormData({...formData, pincode: v})} />
+                <InputBlock label="Pincode" type="numeric" value={formData.pincode} onChange={(v: string) => setFormData({...formData, pincode: v})} />
               </div>
             </form>
 
-            {/* FOOTER */}
-            <div className="p-8 border-t border-slate-100 bg-white flex gap-4">
+            {/* FOOTER ACTION BUTTONS */}
+            <div className="p-4 sm:p-8 border-t border-slate-100 bg-white flex gap-3 sm:gap-4 items-center">
               <button 
                 type="button" 
                 onClick={onClose} 
-                className="flex-1 text-slate-400 hover:text-slate-900 transition-colors uppercase text-xs tracking-widest"
+                className="flex-1 text-slate-400 hover:text-slate-900 transition-colors uppercase text-xs tracking-wider font-black py-3"
               >
                 Discard
               </button>
               
-              {/* BUTTON FIX: Linked to form ID 'update-profile-form' */}
               <button 
                 type="submit" 
                 form="update-profile-form"
                 disabled={loading}
-                className="flex-[2] bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3 hover:bg-black transition-all shadow-xl disabled:opacity-50"
+                className="flex-[2] bg-slate-900 text-white h-11 sm:h-12 rounded-xl font-black uppercase text-xs tracking-wider flex items-center justify-center gap-2 hover:bg-black transition-all shadow-md disabled:opacity-50"
               >
-                {loading ? <Loader2 className="animate-spin" size={18}/> : <><Save size={18}/> Commit Changes</>}
+                {loading ? <Loader2 className="animate-spin" size={16}/> : <><Save size={16}/> Save Changes</>}
               </button>
             </div>
           </motion.div>
@@ -145,17 +147,29 @@ export default function UpdateDrawer({ isOpen, onClose, initialData, onSuccess }
   );
 }
 
-function InputBlock({ label, value, onChange, icon }: any) {
+interface InputBlockProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  icon?: React.ReactNode;
+  type?: string;
+}
+
+function InputBlock({ label, value, onChange, icon, type = "text" }: InputBlockProps) {
   return (
-    <div className="space-y-2">
-      <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{label}</label>
+    <div className="space-y-1.5 sm:space-y-2 w-full">
+      <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1 block">{label}</label>
       <div className="relative group">
-        {icon && <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-lime-500 transition-colors pointer-events-none">{icon}</div>}
+        {icon && (
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-lime-500 transition-colors pointer-events-none shrink-0">
+            {icon}
+          </div>
+        )}
         <input 
-          type="text" 
+          type={type} 
           value={value || ""} 
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full bg-slate-50 border border-slate-100 py-4 ${icon ? 'pl-14' : 'pl-6'} pr-6 rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-lime-500/5 transition-all text-sm font-bold text-slate-800 shadow-inner`}
+          className={`w-full bg-slate-50 border border-slate-100 py-2.5 sm:py-4 ${icon ? 'pl-11' : 'pl-4'} pr-4 rounded-xl outline-none focus:bg-white focus:ring-4 focus:ring-lime-500/5 transition-all text-sm font-semibold text-slate-800 shadow-inner`}
         />
       </div>
     </div>
