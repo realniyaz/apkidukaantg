@@ -10,21 +10,23 @@ export enum SaleStatus {
 
 export interface SaleItem {
   id?: number;
-  product_id?: number; // Optional as backend allows custom items via product_name
+  product_id?: number;
   product_name: string;
   quantity: number;
   selling_price: number;
   gst_percent?: number;
-  line_total?: number; // Pre-calculated total for the UI
+  line_total?: number;
 }
 
 export interface Sale {
   id: number;
-  invoice_number: string | null; // Nullable for Drafts
-  customer_name: string;
-  customer_phone: string; // Renamed from phone_number to match Swagger /sales/
+  invoice_number: string | null;
   
-  // Amounts (Numbers for easy frontend calculation)
+  // Updated to allow nulls as per backend schema (Optional[str] = None)
+  customer_name: string | null;
+  customer_phone: string | null;
+  
+  // Amounts
   sub_total: number;
   total_gst: number;
   total_amount: number;
@@ -41,7 +43,6 @@ export interface Sale {
 
 export interface SalePayment {
   id?: number;
-  // 🟢 FIXED: Lowercase to match backend validation: 'cash' | 'upi' | 'card' | 'bank'
   mode: 'cash' | 'upi' | 'card' | 'bank';
   amount: number;
   created_at?: string;
@@ -69,7 +70,7 @@ export interface AddItemsPayload {
 }
 
 /**
- * Specifically for the /cart/checkout endpoint (Legacy/Hybrid support)
+ * Specifically for the /cart/checkout endpoint
  */
 export interface SaleCreatePayload {
   customer_name: string;
