@@ -179,12 +179,16 @@ export default function SaleControlCenter() {
   return (
     <div className="p-4 sm:p-6 md:p-10 pb-24 text-slate-900">
       <PaymentModal 
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        totalAmount={balanceDue}
-        isProcessing={actionLoading === "payment"}
-        onConfirm={handlePayment}
-      />
+  isOpen={isPaymentModalOpen}
+  onClose={() => setIsPaymentModalOpen(false)}
+  totalAmount={balanceDue}
+  isProcessing={actionLoading === "payment"}
+  onConfirm={handlePayment}
+  // --- ADD THESE TWO LINES TO FIX THE ERROR ---
+  saleId={Number(saleId)} 
+  saleStatus={sale?.status || 'DRAFT'}
+  // --------------------------------------------
+/>
 
       {/* --- HEADER --- */}
       <div className="max-w-7xl mx-auto mb-8 sm:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
